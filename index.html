@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mənim Şəhərim</title>
+<style>
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #dff0d8;
+}
+#menu {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  background: #4caf50;
+  display: flex;
+  justify-content: space-around;
+  padding: 10px 0;
+}
+.button {
+  background: white;
+  border-radius: 10px;
+  padding: 8px 12px;
+  font-size: 18px;
+}
+#map {
+  height: calc(100vh - 70px);
+  background: #a5d6a7;
+  position: relative;
+}
+.building {
+  position: absolute;
+  font-size: 28px;
+}
+</style>
+</head>
+<body>
+
+<div id="map"></div>
+
+<div id="menu">
+  <div class="button" onclick="select('🏠')">🏠 Ev</div>
+  <div class="button" onclick="select('🏪')">🏪 Mağaza</div>
+  <div class="button" onclick="select('🌳')">🌳 Park</div>
+  <div class="button" onclick="select('🛣️')">🛣️ Yol</div>
+</div>
+
+<script>
+let selected = '🏠';
+
+function select(item) {
+  selected = item;
+}
+
+document.getElementById("map").addEventListener("click", function(e) {
+  const b = document.createElement("div");
+  b.className = "building";
+  b.textContent = selected;
+  b.style.left = (e.clientX - 15) + "px";
+  b.style.top = (e.clientY - 15) + "px";
+  this.appendChild(b);
+});
+</script>
+
+</body>
+</html>
