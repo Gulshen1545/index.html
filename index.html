@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mənim Şəhərim</title>
+<style>
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #c8f7c5;
+}
+#menu {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  background: #2e7d32;
+  display: flex;
+  justify-content: space-around;
+  padding: 12px 0;
+  z-index: 10;
+  box-shadow: 0 -3px 5px rgba(0,0,0,0.2);
+}
+.button {
+  background: white;
+  border-radius: 12px;
+  padding: 10px 15px;
+  font-size: 20px;
+  cursor: pointer;
+  user-select: none;
+  transition: transform 0.1s, background 0.2s;
+}
+.button:active {
+  transform: scale(0.95);
+  background: #ffd700;
+}
+#map {
+  height: calc(100vh - 80px);
+  background: linear-gradient(#a5d6a7, #81c784);
+  position: relative;
+  overflow: hidden;
+}
+.building {
+  position: absolute;
+  font-size: 32px;
+  pointer-events: none;
+  transition: transform 0.2s;
+}
+.building:hover {
+  transform: scale(1.2) rotate(5deg);
+}
+</style>
+</head>
+<body>
+
+<div id="map"></div>
+
+<div id="menu">
+  <div class="button" data-type="🏠">🏠 Ev</div>
+  <div class="button" data-type="🏪">🏪 Mağaza</div>
+  <div class="button" data-type="🌳">🌳 Park</div>
+  <div class="button" data-type="🛣️">🛣️ Yol</div>
+</div>
+
+<script>
+let selected = '🏠';
+const map = document.getElementById("map");
+
+// Menyu düymələrinə klik
+document.querySelectorAll('.button').forEach(btn => {
+  btn.addEventListener('click', () => {
+    selected = btn.getAttribute('data-type');
+    document.querySelectorAll('.button').forEach(b => b.style.background = 'white');
+    btn.style.background = '#ffd700';
+  });
+});
+
+// Tikilmiş binaları saxlayan array
+let buildings = [];
+
+// Bina yaratmaq funksiyası
+function createBuilding(type, x, y, save = true) {
+  const b = document.createElement("div");
+  b.className = "building";
+  b.textContent = type;
+  b.style.left = (x - 20) + "px";
+  b.style.top = (y - 20) + "px";
+  map.appendChild(b);
+
+  b.style.transform = "scale(0)";
+  setTimeout(() => { b.style.transform = "scale(1)"; }, 10);
+
+  if (save) {
+    buildings.push({type, x, y});
+    localStorage.setItem("buildings", JSON.stringify(buildings));
+  }
+}
+
+// Xəritəyə klik
+map.addEventListener("click", function(e) {
+  createBuilding(selected, e.clientX, e.clientY);
+});
+
+// LocalStorage-dan tikilmiş binaları yüklə
+window.addEventListener("load", () => {
+  const saved = JSON.parse(localStorage.getItem("buildings") || "[]");
+  saved.forEach(b => createBuilding(b.type, b.x, b.y, false));
+  buildings = saved;
+});
+</script>
+
+</body>
+</html>
